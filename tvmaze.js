@@ -3,7 +3,7 @@
 const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
-let episodeData = []
+let episodeData = [] //This stores data about each episode for each indivdual show; when the time comes, it comes in use and helps store the information about the episodes of the show and gives information to display.
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -12,9 +12,8 @@ let episodeData = []
  *    (if no image URL given by API, put in a default image URL)
  */
 
-async function getShowsByTerm(term) {
+async function getShowsByTerm(term) { //This whole thing retrives the information about the shows from the API from a given search result
   const aShow = await axios.get("https://api.tvmaze.com/search/shows", {params:{q:term}});
-  console.log(aShow);
   const showList = [];
   for(let i in aShow.data){
     if (!aShow.data[i].show.summary){
@@ -41,7 +40,7 @@ return showList;
 function populateShows(shows) {
   $showsList.empty();
 
-  for (let show of shows) {
+  for (let show of shows) { //This creates the HTML for the show on the page
     const $show = $(
       `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
@@ -72,7 +71,6 @@ function populateShows(shows) {
 async function searchForShowAndDisplay() {
   const term = $("#searchForm-term").val();
   const shows = await getShowsByTerm(term);
-  console.log(shows);
   $episodesArea.hide();
   populateShows(shows);
 }
@@ -88,7 +86,7 @@ populateEpisodes(episodeData)
 return episodeData;
 }
 
-function populateEpisodes(episodes){
+function populateEpisodes(episodes){ //This will create the lis for the shows' episode
   if($("#episodesList").length > 0){
     $("#episodesList").html("");
   }
@@ -102,10 +100,9 @@ $searchForm.on("submit", async function (evt) {
   await searchForShowAndDisplay();
 });
 
-$("#showsList").on("click", "button.Show-getEpisodes", async function(evt){
+$("#showsList").on("click", "button.Show-getEpisodes", async function(evt){ //When clicked, it shows the episode list for a given show that it's clicked under
   evt.preventDefault();
   await getEpisodes($(evt.target).attr("data-episode-id"));
-  console.log(episodeData);
   $("#episodesArea").attr("style", "display=inline")
   
 })
