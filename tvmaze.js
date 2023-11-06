@@ -34,10 +34,9 @@ async function getShowsByTerm(term) { //This whole thing retrives the informatio
 return showList;
 }
 
-
 /** Given list of shows, create markup for each and to DOM */
 
-function populateShows(shows) {
+function populateShows(shows) { //This function is reponsible for adding the elements to the DOM
   $showsList.empty();
 
   for (let show of shows) { //This creates the HTML for the show on the page
@@ -63,19 +62,18 @@ function populateShows(shows) {
   }
 }
 
-
 /** Handle search form submission: get shows from API and display.
  *    Hide episodes area (that only gets shown if they ask for episodes)
  */
 
-async function searchForShowAndDisplay() {
+async function searchForShowAndDisplay() { //This will use the getShowsByTerm and populateShows functions to handle search form submission
   const term = $("#searchForm-term").val();
   const shows = await getShowsByTerm(term);
   $episodesArea.hide();
   populateShows(shows);
 }
 
-async function getEpisodes(id){
+async function getEpisodes(id){ //This will pull out all the episodes of a given show by ID from its API URL
   episodeData = [];
   const theEpisodes = await axios.get(`https://api.tvmaze.com/shows/${id}/episodes`);
   for(let episode in theEpisodes.data){
@@ -95,7 +93,7 @@ function populateEpisodes(episodes){ //This will create the lis for the shows' e
   }
 }
 
-$searchForm.on("submit", async function (evt) {
+$searchForm.on("submit", async function (evt) { //When the form is submitted, it will start call the searchForShowAndDisplay function to tell it that it needs to search for the shows from the input
   evt.preventDefault();
   await searchForShowAndDisplay();
 });
